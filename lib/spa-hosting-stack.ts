@@ -60,7 +60,7 @@ export class SpaHostingStack extends Stack {
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
-        origin: new origins.S3Origin(privateBucket),
+        origin: origins.S3BucketOrigin.withOriginAccessControl(privateBucket),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
         compress: true,

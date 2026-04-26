@@ -12,7 +12,7 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint --ignore-path .gitignore --fix src",
     "prettier": "prettier src --write",
-    "cdk:synth": "cdk synth",
+    "cdk:synth": "npm run build && cdk synth",
     "deploy:s3-only": "npm run build && cdk deploy --require-approval never -c deployTarget=s3-only",
     "deploy:cloudfront": "npm run build && cdk deploy --require-approval never -c deployTarget=cloudfront",
     "destroy:s3-only": "cdk destroy --force -c deployTarget=s3-only",
