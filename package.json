@@ -1,0 +1,24 @@
+{
+  "name": "aws-cloud-dev-spa-hosting",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:app": "node scripts/build-app.mjs",
+    "cdk:synth": "cdk synth",
+    "deploy:s3-only": "npm run build:app && cdk deploy --require-approval never -c deployTarget=s3-only",
+    "deploy:cloudfront": "npm run build:app && cdk deploy --require-approval never -c deployTarget=cloudfront",
+    "destroy:s3-only": "cdk destroy --force -c deployTarget=s3-only",
+    "destroy:cloudfront": "cdk destroy --force -c deployTarget=cloudfront"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.196.0",
+    "constructs": "^10.4.2",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "aws-cdk": "^2.1018.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
