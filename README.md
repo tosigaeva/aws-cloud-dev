@@ -155,10 +155,8 @@ npm run destroy:cloudfront
 
 ## Required Links
 
-Replace these placeholders after deployment:
-
-- S3 website URL: `http://<your-bucket-name>.s3-website-<region>.amazonaws.com`
-- CloudFront URL: `https://<your-distribution-domain>`
+- S3 website URL: `https://rsshopspastack-sitebucket397a1860-nzwmlqxdezu6.s3.eu-central-1.amazonaws.com`
+- CloudFront URL: `https://do3zjcvipb5lx.cloudfront.net`
 
 ## Pull Request Description
 
