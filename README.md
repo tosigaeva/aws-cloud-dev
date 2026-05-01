@@ -1,38 +1,178 @@
-# React-shop-cloudfront
+# Task 2: Serve SPA in AWS S3 and CloudFront
 
-This is frontend starter project for nodejs-aws mentoring program. It uses the following technologies:
+This repository contains the React Shop SPA together with AWS CDK configuration for Task 2.
 
-- [Vite](https://vitejs.dev/) as a project bundler
-- [React](https://beta.reactjs.org/) as a frontend framework
-- [React-router-dom](https://reactrouterdotcom.fly.dev/) as a routing library
-- [MUI](https://mui.com/) as a UI framework
-- [React-query](https://react-query-v3.tanstack.com/) as a data fetching library
-- [Formik](https://formik.org/) as a form library
-- [Yup](https://github.com/jquense/yup) as a validation schema
-- [Vitest](https://vitest.dev/) as a test runner
-- [MSW](https://mswjs.io/) as an API mocking library
-- [Eslint](https://eslint.org/) as a code linting tool
-- [Prettier](https://prettier.io/) as a code formatting tool
-- [TypeScript](https://www.typescriptlang.org/) as a type checking tool
+## What Was Done
+
+- added AWS CDK configuration for static SPA hosting
+- added automated deployment to S3
+- added automated deployment to CloudFront
+- configured SPA fallback to `index.html`
+- added deployment and destroy npm scripts
+
+## Tech Stack
+
+- Vite
+- React
+- TypeScript
+- Material UI
+- AWS CDK
+- Amazon S3
+- Amazon CloudFront
+
+## Prerequisites
+
+- Node.js 20
+- npm
+- AWS CLI
+- AWS CDK v2
+
+Recommended:
+
+```bash
+nvm use
+```
+
+If Node 20 is not installed:
+
+```bash
+nvm install 20
+nvm use 20
+```
+
+Install AWS CDK globally if needed:
+
+```bash
+npm install -g aws-cdk
+```
+
+## Environment Setup
+
+Create `.env` based on `.env.example` and fill in:
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+- `AWS_ACCOUNT_ID`
+- `APP_DIR=.`
+- `BUILD_DIR=dist`
+- `STACK_NAME=RsShopSpaStack`
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+## Run Locally
+
+```bash
+npm run start
+```
 
 ## Available Scripts
 
-### `start`
+- `npm run start`
+- `npm run build`
+- `npm run deploy:s3-only`
+- `npm run deploy:cloudfront`
+- `npm run destroy:s3-only`
+- `npm run destroy:cloudfront`
+- `npm run cdk:synth`
 
-Starts the project in dev mode with mocked API on local environment.
+## AWS Bootstrap
 
-### `build`
+Before the first CDK deployment:
 
-Builds the project for production in `dist` folder.
+```bash
+npx cdk bootstrap
+```
 
-### `preview`
+## Manual Deployment
 
-Starts the project in production mode on local environment.
+### S3 Website Hosting
 
-### `test`, `test:ui`, `test:coverage`
+1. Create an S3 bucket.
+2. Enable static website hosting.
+3. Set `index.html` as the index document.
+4. Set `index.html` as the error document for SPA routing.
+5. Build the app.
+6. Upload the `dist` files manually to the bucket.
+7. Verify the app is available via the S3 website endpoint.
 
-Runs tests in console, in browser or with coverage.
+### CloudFront
 
-### `lint`, `prettier`
+1. Create a CloudFront distribution for the S3 bucket.
+2. Verify CloudFront can serve the app.
+3. Make a visible app change.
+4. Rebuild and upload again.
+5. Create a CloudFront invalidation.
 
-Runs linting and formatting for all files in `src` folder.
+## Automated Deployment
+
+### Deploy S3 Website Hosting
+
+```bash
+npm run deploy:s3-only
+```
+
+This creates:
+
+- public S3 bucket
+- static website hosting
+- deployment of built SPA files
+
+### Destroy S3 Website Hosting
+
+```bash
+npm run destroy:s3-only
+```
+
+### Deploy Final CloudFront Setup
+
+```bash
+npm run deploy:cloudfront
+```
+
+This creates:
+
+- private S3 bucket
+- CloudFront distribution
+- automatic deployment of built SPA files
+- automatic CloudFront invalidation
+
+### Destroy Final CloudFront Setup
+
+```bash
+npm run destroy:cloudfront
+```
+
+## Deployment Notes
+
+- `s3-only` is intended for the simpler website-hosting stage
+- `cloudfront` is intended for the final secure setup
+- CloudFront is configured to return `index.html` for `403` and `404` so SPA routes work correctly
+
+## Required Links
+
+- S3 website URL: `https://rsshopspastack-sitebucket397a1860-nzwmlqxdezu6.s3.eu-central-1.amazonaws.com`
+- CloudFront URL: `https://do3zjcvipb5lx.cloudfront.net`
+
+## Pull Request Description
+
+Example:
+
+```md
+## What has been done
+
+- [x] S3 bucket created and configured
+- [x] App deployed to S3 website hosting
+- [x] CloudFront distribution created
+- [x] AWS CDK deployment added
+- [x] Automatic CloudFront invalidation configured
+
+## Links
+
+- S3 website: http://<your-bucket-name>.s3-website-<region>.amazonaws.com
+- CloudFront: https://<your-distribution-domain>
+```
