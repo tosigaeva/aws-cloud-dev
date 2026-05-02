@@ -14,7 +14,9 @@
     "prettier": "prettier src --write",
     "cdk:synth": "npm run build && cdk synth",
     "deploy:s3-only": "npm run build && cdk deploy --require-approval never -c deployTarget=s3-only",
-    "deploy:cloudfront": "npm run build && cdk deploy --require-approval never -c deployTarget=cloudfront",
+    "deploy:cloudfront": "cdk deploy --require-approval never -c deployTarget=cloudfront",
+    "outputs:s3-only": "aws cloudformation describe-stacks --stack-name ${STACK_NAME_S3:-RsShopSpaS3Stack} --region ${AWS_REGION:-eu-central-1} --query 'Stacks[0].Outputs'",
+    "outputs:cloudfront": "aws cloudformation describe-stacks --stack-name ${STACK_NAME_CLOUDFRONT:-RsShopSpaCloudFrontStack} --region ${AWS_REGION:-eu-central-1} --query 'Stacks[0].Outputs'",
     "destroy:s3-only": "cdk destroy --force -c deployTarget=s3-only",
     "destroy:cloudfront": "cdk destroy --force -c deployTarget=cloudfront"
   },
