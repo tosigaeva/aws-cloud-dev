@@ -16,10 +16,17 @@ if (!account || !region) {
 
 const deployTarget = app.node.tryGetContext('deployTarget') ?? 'cloudfront';
 const buildDir = process.env.BUILD_DIR ?? 'dist';
-const stackName = process.env.STACK_NAME ?? 'RsShopSpaStack';
+const s3StackName = process.env.STACK_NAME_S3 ?? process.env.STACK_NAME ?? 'RsShopSpaS3Stack';
+const defaultStackName =
+  deployTarget === 's3-only' ? 'RsShopSpaS3Stack' : 'RsShopSpaCloudFrontStack';
+const stackName =
+  deployTarget === 's3-only'
+    ? process.env.STACK_NAME_S3 ?? process.env.STACK_NAME ?? defaultStackName
+    : process.env.STACK_NAME_CLOUDFRONT ?? process.env.STACK_NAME ?? defaultStackName;
 
 new SpaHostingStack(app, stackName, {
   env: { account, region },
   deployTarget,
   buildDir,
+  s3StackName,
 });
