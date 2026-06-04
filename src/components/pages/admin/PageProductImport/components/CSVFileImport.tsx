@@ -28,10 +28,17 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
       return;
     }
 
+    const authorizationToken = localStorage.getItem("authorization_token")?.trim();
+
     const response = await axios.get<string>(url, {
       params: {
         name: file.name,
       },
+      headers: authorizationToken
+        ? {
+            Authorization: `Basic ${authorizationToken}`,
+          }
+        : undefined,
     });
 
     await fetch(response.data, {
