@@ -3,6 +3,7 @@ import API_PATHS from "~/constants/apiPaths";
 import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
+import { getBasicAuthHeaders } from "~/utils/authHeaders";
 
 export function useAvailableProducts() {
   return useQuery<AvailableProduct[], AxiosError>(
@@ -49,9 +50,7 @@ export function useRemoveProductCache() {
 export function useUpsertAvailableProduct() {
   return useMutation((values: AvailableProduct) =>
     axios.post<AvailableProduct>(`${API_PATHS.bff}/products`, values, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-      },
+      headers: getBasicAuthHeaders(),
     })
   );
 }
@@ -59,9 +58,7 @@ export function useUpsertAvailableProduct() {
 export function useDeleteAvailableProduct() {
   return useMutation((id: string) =>
     axios.delete(`${API_PATHS.bff}/products/${id}`, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-      },
+      headers: getBasicAuthHeaders(),
     })
   );
 }
