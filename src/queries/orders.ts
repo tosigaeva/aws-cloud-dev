@@ -9,9 +9,7 @@ import { getBasicAuthHeaders } from "~/utils/authHeaders";
 export function useOrders() {
   return useQuery<Order[], AxiosError>("orders", async () => {
     const res = await axios.get<Order[]>(`${API_PATHS.order}/order`, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
-      },
+      headers: getBasicAuthHeaders(),
     });
     return res.data;
   });
