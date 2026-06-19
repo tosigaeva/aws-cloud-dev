@@ -23,6 +23,7 @@ import TableContainer from "@mui/material/TableContainer";
 import Box from "@mui/material/Box";
 import { useQueries } from "react-query";
 import { useInvalidateOrder, useUpdateOrderStatus } from "~/queries/orders";
+import { getBasicAuthHeaders } from "~/utils/authHeaders";
 
 type FormValues = {
   status: OrderStatus;
@@ -35,7 +36,9 @@ export default function PageOrder() {
     {
       queryKey: ["order", { id }],
       queryFn: async () => {
-        const res = await axios.get<Order>(`${API_PATHS.order}/order/${id}`);
+        const res = await axios.get<Order>(`${API_PATHS.order}/order/${id}`, {
+          headers: getBasicAuthHeaders(),
+        });
         return res.data;
       },
     },
@@ -43,7 +46,7 @@ export default function PageOrder() {
       queryKey: "products",
       queryFn: async () => {
         const res = await axios.get<AvailableProduct[]>(
-          `${API_PATHS.bff}/product/available`
+          `${API_PATHS.bff}/products`
         );
         return res.data;
       },
