@@ -76,6 +76,16 @@ export default function PageProductForm() {
                     required
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    name="imageUrl"
+                    label="Image URL"
+                    fullWidth
+                    autoComplete="off"
+                    required
+                  />
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <Field
                     component={TextField}

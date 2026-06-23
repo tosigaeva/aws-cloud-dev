@@ -16,6 +16,8 @@ test("Renders products list", async () => {
       id: "1",
       title: "Product 1",
       description: "Product 1 description",
+      imageUrl:
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
       price: 1,
       count: 1,
     },
@@ -23,6 +25,8 @@ test("Renders products list", async () => {
       id: "2",
       title: "Product 2",
       description: "Product 2 description",
+      imageUrl:
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
       price: 2,
       count: 2,
     },
