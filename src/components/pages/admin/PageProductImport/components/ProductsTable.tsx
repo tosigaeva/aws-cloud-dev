@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
 import { formatAsPrice } from "~/utils/utils";
 import {
   useAvailableProducts,
@@ -15,12 +16,17 @@ import {
 } from "~/queries/products";
 
 export default function ProductsTable() {
-  const { data = [] } = useAvailableProducts();
-  const { mutate: deleteAvailableProduct } = useDeleteAvailableProduct();
+  const { data = [], isFetching, isLoading } = useAvailableProducts();
+  const {
+    mutate: deleteAvailableProduct,
+    isLoading: isDeleting,
+    variables: deletingProductId,
+  } = useDeleteAvailableProduct();
   const invalidateAvailableProducts = useInvalidateAvailableProducts();
 
   return (
     <TableContainer component={Paper}>
+      {(isLoading || isFetching || isDeleting) && <LinearProgress />}
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -32,6 +38,13 @@ export default function ProductsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
+          {isLoading && (
+            <TableRow>
+              <TableCell colSpan={5} align="center">
+                Loading products...
+              </TableCell>
+            </TableRow>
+          )}
           {data.map((product) => (
             <TableRow key={product.id}>
               <TableCell component="th" scope="row">
@@ -48,12 +61,14 @@ export default function ProductsTable() {
                   color="primary"
                   component={Link}
                   to={`/admin/product-form/${product.id}`}
+                  disabled={isDeleting}
                 >
                   Manage
                 </Button>
                 <Button
                   size="small"
                   color="secondary"
+                  disabled={isDeleting}
                   onClick={() => {
                     if (product.id) {
                       deleteAvailableProduct(product.id, {
@@ -62,7 +77,9 @@ export default function ProductsTable() {
                     }
                   }}
                 >
-                  Delete
+                  {isDeleting && deletingProductId === product.id
+                    ? "Deleting..."
+                    : "Delete"}
                 </Button>
               </TableCell>
             </TableRow>

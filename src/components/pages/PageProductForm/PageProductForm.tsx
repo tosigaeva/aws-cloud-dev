@@ -6,6 +6,8 @@ import TextField from "~/components/Form/TextField";
 import { useNavigate, useParams } from "react-router-dom";
 import PaperLayout from "~/components/PaperLayout/PaperLayout";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import {
   useAvailableProduct,
   useInvalidateAvailableProducts,
@@ -20,8 +22,9 @@ export default function PageProductForm() {
   const { id } = useParams<{ id: string }>();
   const invalidateAvailableProducts = useInvalidateAvailableProducts();
   const removeProductCache = useRemoveProductCache();
-  const { data, isLoading } = useAvailableProduct(id);
-  const { mutateAsync: upsertAvailableProduct } = useUpsertAvailableProduct();
+  const { data, isError, isLoading } = useAvailableProduct(id);
+  const { mutateAsync: upsertAvailableProduct, isLoading: isSaving } =
+    useUpsertAvailableProduct();
   const onSubmit = (values: AvailableProduct) => {
     const formattedValues = AvailableProductSchema.cast(values);
     const productToSave = id
@@ -45,7 +48,20 @@ export default function PageProductForm() {
         {id ? "Edit product" : "Create new product"}
       </Typography>
       {isLoading ? (
-        <>Loading...</>
+        <Box display="flex" justifyContent="center" py={4}>
+          <CircularProgress />
+        </Box>
+      ) : id && (isError || !data) ? (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography align="center">Product not found.</Typography>
+          </Grid>
+          <Grid item xs={12} container justifyContent="center">
+            <Button color="primary" onClick={() => navigate("/admin/products")}>
+              Back to products
+            </Button>
+          </Grid>
+        </Grid>
       ) : (
         <Formik
           initialValues={data ?? initialValues}
@@ -110,6 +126,7 @@ export default function PageProductForm() {
                   <Button
                     color="primary"
                     onClick={() => navigate("/admin/products")}
+                    disabled={isSubmitting || isSaving}
                   >
                     Cancel
                   </Button>
@@ -117,9 +134,9 @@ export default function PageProductForm() {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    disabled={!dirty || isSubmitting}
+                    disabled={!dirty || isSubmitting || isSaving}
                   >
-                    Save Product
+                    {isSubmitting || isSaving ? "Saving..." : "Save Product"}
                   </Button>
                 </Grid>
               </Grid>
