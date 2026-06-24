@@ -7,6 +7,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import LinearProgress from "@mui/material/LinearProgress";
+import CircularProgress from "@mui/material/CircularProgress";
+import React from "react";
 import {
   useDeleteOrder,
   useInvalidateOrders,
@@ -14,12 +17,14 @@ import {
 } from "~/queries/orders";
 
 export default function Orders() {
-  const { data } = useOrders();
+  const { data, isFetching, isLoading } = useOrders();
   const invalidateOrders = useInvalidateOrders();
-  const { mutate: deleteOrder } = useDeleteOrder();
+  const { mutate: deleteOrder, isLoading: isDeleting } = useDeleteOrder();
+  const [deletingOrderId, setDeletingOrderId] = React.useState("");
 
   return (
     <TableContainer component={Paper}>
+      {(isLoading || isFetching || isDeleting) && <LinearProgress />}
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -47,17 +52,28 @@ export default function Orders() {
                   color="primary"
                   component={Link}
                   to={order.id}
+                  disabled={isDeleting}
                 >
                   Manage
                 </Button>
                 <Button
                   size="small"
                   color="secondary"
-                  onClick={() =>
-                    deleteOrder(order.id, { onSuccess: invalidateOrders })
+                  disabled={isDeleting}
+                  startIcon={
+                    deletingOrderId === order.id ? (
+                      <CircularProgress color="inherit" size={14} />
+                    ) : undefined
                   }
+                  onClick={() => {
+                    setDeletingOrderId(order.id);
+                    deleteOrder(order.id, {
+                      onSuccess: invalidateOrders,
+                      onSettled: () => setDeletingOrderId(""),
+                    });
+                  }}
                 >
-                  Delete
+                  {deletingOrderId === order.id ? "Deleting..." : "Delete"}
                 </Button>
               </TableCell>
             </TableRow>

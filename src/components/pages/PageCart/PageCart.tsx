@@ -50,6 +50,7 @@ export default function PageCart() {
     CartStep.ReviewCart
   );
   const [address, setAddress] = useState<Address>(initialAddressValues);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const isCartEmpty = data.length === 0;
 
@@ -66,11 +67,13 @@ export default function PageCart() {
       address,
     };
 
+    setIsPlacingOrder(true);
     submitOrder(values as Omit<Order, "id">, {
       onSuccess: () => {
         setActiveStep(activeStep + 1);
         invalidateCart();
       },
+      onSettled: () => setIsPlacingOrder(false),
     });
   };
 
@@ -118,7 +121,11 @@ export default function PageCart() {
         activeStep !== CartStep.Success && (
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             {activeStep !== CartStep.ReviewCart && (
-              <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+              <Button
+                disabled={isPlacingOrder}
+                onClick={handleBack}
+                sx={{ mt: 3, ml: 1 }}
+              >
                 Back
               </Button>
             )}
@@ -126,9 +133,14 @@ export default function PageCart() {
               variant="contained"
               color="primary"
               sx={{ mt: 3, ml: 1 }}
+              disabled={isPlacingOrder}
               onClick={handleNext}
             >
-              {activeStep === steps.length - 1 ? "Place order" : "Next"}
+              {isPlacingOrder
+                ? "Placing order..."
+                : activeStep === steps.length - 1
+                ? "Place order"
+                : "Next"}
             </Button>
           </Box>
         )}

@@ -139,7 +139,7 @@ export default function PageOrder() {
                     color="primary"
                     disabled={!dirty || isSubmitting}
                   >
-                    Change status
+                    {isSubmitting ? "Changing status..." : "Change status"}
                   </Button>
                 </Grid>
               </Grid>
