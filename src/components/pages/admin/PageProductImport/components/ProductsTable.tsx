@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 import React from "react";
 import { formatAsPrice } from "~/utils/utils";
 import {
@@ -68,6 +69,11 @@ export default function ProductsTable() {
                   size="small"
                   color="secondary"
                   disabled={isDeleting}
+                  startIcon={
+                    deletingProductId === product.id ? (
+                      <CircularProgress color="inherit" size={14} />
+                    ) : undefined
+                  }
                   onClick={() => {
                     if (product.id) {
                       setDeletingProductId(product.id);
