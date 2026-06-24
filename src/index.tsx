@@ -140,11 +140,15 @@ axios.interceptors.response.use(
       const status = error.response?.status;
 
       if (status === 401) {
-        showAuthError("Authorization header is missing or invalid. Please set authorization_token in localStorage.");
+        showAuthError(
+          "Authorization header is missing or invalid. Please set authorization_token in localStorage."
+        );
       }
 
       if (status === 403) {
-        showAuthError("Access denied. Please check your authorization_token value.");
+        showAuthError(
+          "Access denied. Please check your authorization_token value."
+        );
       }
     }
 

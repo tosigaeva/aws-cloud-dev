@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
+import React from "react";
 import { formatAsPrice } from "~/utils/utils";
 import {
   useAvailableProducts,
@@ -17,11 +18,9 @@ import {
 
 export default function ProductsTable() {
   const { data = [], isFetching, isLoading } = useAvailableProducts();
-  const {
-    mutate: deleteAvailableProduct,
-    isLoading: isDeleting,
-    variables: deletingProductId,
-  } = useDeleteAvailableProduct();
+  const { mutate: deleteAvailableProduct, isLoading: isDeleting } =
+    useDeleteAvailableProduct();
+  const [deletingProductId, setDeletingProductId] = React.useState("");
   const invalidateAvailableProducts = useInvalidateAvailableProducts();
 
   return (
@@ -71,8 +70,10 @@ export default function ProductsTable() {
                   disabled={isDeleting}
                   onClick={() => {
                     if (product.id) {
+                      setDeletingProductId(product.id);
                       deleteAvailableProduct(product.id, {
                         onSuccess: invalidateAvailableProducts,
+                        onSettled: () => setDeletingProductId(""),
                       });
                     }
                   }}
