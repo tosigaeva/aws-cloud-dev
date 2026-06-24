@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 import React from "react";
 import {
   useDeleteOrder,
@@ -59,6 +60,11 @@ export default function Orders() {
                   size="small"
                   color="secondary"
                   disabled={isDeleting}
+                  startIcon={
+                    deletingOrderId === order.id ? (
+                      <CircularProgress color="inherit" size={14} />
+                    ) : undefined
+                  }
                   onClick={() => {
                     setDeletingOrderId(order.id);
                     deleteOrder(order.id, {
